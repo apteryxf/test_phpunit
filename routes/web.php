@@ -14,7 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Auth::routes();
+Auth::routes(['verify' => true]);
+Route::post('login', 'Auth\LoginController@authenticate');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/users', 'UserController@index')->name('users.index');
-Route::get('/members', 'MemberController@index')->name('members.index');
+Route::group(['middleware' => 'verified'], function(){
+    Route::get('/users', 'UserController@index')->name('users.index');
+    Route::get('/members', 'MemberController@index')->name('members.index');
+    Route::get('/vue_table', 'MemberController@vue');
+});
